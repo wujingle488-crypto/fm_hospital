@@ -1,12 +1,28 @@
 # 飞马智慧医院
 
-面向患者小程序和医院管理端的门诊系统。患者可以查询科室与医生排班、占用号源并完成微信支付挂号；就诊前使用人脸核身，问诊时通过实时音视频进入诊室。管理端维护医院组织、医生、出诊计划和问诊报告。
+[![Java](https://img.shields.io/badge/Java-15-E76F00?logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.5.2-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![MyBatis](https://img.shields.io/badge/MyBatis-Data%20Access-C00000)](https://mybatis.org/mybatis-3/)
+[![License](https://img.shields.io/badge/license-not%20specified-lightgrey)](#工程说明)
 
-技术栈：Java 15 · Spring Boot 2.5 · MyBatis · MySQL · Druid · Redis · Sa-Token · WebSocket · Quartz · RabbitMQ · MinIO · 微信支付 JSAPI · 腾讯云人脸识别 · 腾讯云实时音视频 TRTC
+> 一套贯通患者预约挂号、人脸核身、微信支付与视频问诊的智慧门诊系统。
 
-## 适合网申的项目描述
+## 项目概述
 
-设计并实现医院管理端与患者小程序端分离的门诊后端。挂号时先用 Redis 预占医生时段号源，再创建微信支付预订单并写入挂号记录；支付或落库失败时回滚号源，避免超卖。问诊链路包含人脸核身、TRTC 房间凭证、在线医生列表、问诊图片和问诊报告。管理端通过 RabbitMQ 异步接收问诊报告并落库，WebSocket 维持会话在线状态。
+项目将患者小程序与医院管理端拆分为两个独立后端。患者可以查询科室、医生和出诊时段，完成微信支付挂号；就诊前通过腾讯云人脸识别核验身份，问诊时使用 TRTC 进入实时音视频诊室。管理端负责医院组织、医生档案、出诊计划、权限以及问诊报告。
+
+挂号链路先在 Redis 中预占医生时段号源，再创建微信支付预订单并写入挂号记录；支付或持久化失败时释放名额，降低号源超卖风险。视频问诊链路提供在线医生列表、房间凭证、问诊图片和报告查询，管理端通过 RabbitMQ 异步消费问诊报告，WebSocket 负责维护用户在线会话。
+
+**技术栈：** Java 15 · Spring Boot 2.5.2 · MyBatis · MySQL · Druid · Redis · Sa-Token · WebSocket · Quartz · RabbitMQ · MinIO · 微信支付 JSAPI · 腾讯云人脸识别 · 腾讯云实时音视频 TRTC
+
+## 快速导航
+
+- [核心亮点](#核心亮点)
+- [系统架构](#系统架构)
+- [挂号支付](#挂号支付)
+- [模块说明](#模块说明)
+- [主要能力](#主要能力)
+- [本地运行](#本地运行)
 
 ## 核心亮点
 
@@ -71,7 +87,7 @@ sequenceDiagram
   end
 ```
 
-## 模块
+## 模块说明
 
 | 模块 | 端口 | 职责 |
 | --- | --- | --- |
